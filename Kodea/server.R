@@ -9,6 +9,14 @@ library(ggplot2)
 options(shiny.maxRequestSize = 100*1024^2)
 
 shinyServer(function(input, output) {
+  
+  
+  # Linux edo windows
+  if(.Platform$OS.type == "unix") {
+      separator <- "/"
+  } else {
+      separator <- "\\"
+  }
 
   # REACTIVE VALUES ----------------------------------------------------
 
@@ -27,13 +35,13 @@ shinyServer(function(input, output) {
 		length(input$data_loader$names)!=length(rvalues$file_names) || 
 		all(sort(input$data_loader$names)==sort(rvalues$file_names)))) {
 		# Create a temporary directory
-		rvalues$directory <- paste0(tempdir(),Platform$file.sep,gsub(" ","_",gsub(":","_",date())))
+		rvalues$directory <- paste0(tempdir(),separator,gsub(" ","_",gsub(":","_",date())))
 		dir.create(rvalues$directory)
 				
 		# Rename the files to reset their original name
 		sapply(1:nrow(input$data_loader), 
 			   FUN=function(i) {
-				file.copy(input$data_loader$datapath[i], paste0(rvalues$directory, Platform$file.sep,
+				file.copy(input$data_loader$datapath[i], paste0(rvalues$directory, separator,
 				input$data_loader$name[i]))
 			   })
 		
