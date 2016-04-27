@@ -47,13 +47,19 @@ shinyServer(function(input, output) {
   
   # OUTPUTS ------------------------------------------------------------
   
+  
   output$file_list <- renderPlot({
-	raw.data <- getRawData()
+  raw.data <- getRawData()
 	res <- NULL
 	if(!is.null(rvalues$directory)){
 		res <- boxplot(raw.data)
 	}
 	print(res)
+  })
+  
+  output$myPlot <- renderPlot({
+     raw.data <- getRawData()
+     image(raw.data[,1])
   })
 
 })

@@ -1,6 +1,6 @@
 
 
-header <- h1("Affymetrix Array Data Analysis")
+header <- h1("Bioinformatika")
 
 fileLoader <- fileInput (inputId="data_loader", 
 						 label="Upload Files", 
@@ -9,6 +9,7 @@ fileLoader <- fileInput (inputId="data_loader",
 shinyUI(fluidPage(
 	header, 
 	fileLoader,
-	plotOutput(outputId="file_list", width="500px")
+	plotOutput(outputId="file_list", width="500px"),
+	plotOutput(outputId="myPlot", width="500px")
 ))
 
