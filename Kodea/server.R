@@ -70,6 +70,11 @@ shinyServer(function(input, output) {
      print(row.names(raw.data))
      image(raw.data[,1])
   })
+  
+  
+  ## COMBOBOX BAT JARRIKO DA HEMEN -------------------------------------
+  ##
+  ##TODO: 
 
 })
 
