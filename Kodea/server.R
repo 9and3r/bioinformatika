@@ -34,6 +34,8 @@ shinyServer(function(input, output) {
 	if (!is.null(input$data_loader) & (is.null(rvalues$file_names) ||
 		length(input$data_loader$names)!=length(rvalues$file_names) || 
 		all(sort(input$data_loader$names)==sort(rvalues$file_names)))) {
+	  
+	  
 		# Create a temporary directory
 		rvalues$directory <- paste0(tempdir(),separator,gsub(" ","_",gsub(":","_",date())))
 		dir.create(rvalues$directory)
@@ -48,27 +50,34 @@ shinyServer(function(input, output) {
 		# Update the rvalues object
 		rvalues$file_names <- input$data_loader$name
 		rvalues$raw.data <- read.affy(path=rvalues$directory)
-		data <- rvalues$raw.data
+		#data <- rvalues$raw.data
+		data <- rvalues
 	}
 	return(data)
   })
   
   # OUTPUTS ------------------------------------------------------------
   
-  
-  output$file_list <- renderPlot({
-  raw.data <- getRawData()
-	res <- NULL
-	if(!is.null(rvalues$directory)){
-		res <- boxplot(raw.data)
-	}
-	print(res)
-  })
-  
   output$myPlot <- renderPlot({
      raw.data <- getRawData()
-     print(row.names(raw.data))
-     image(raw.data[,1])
+     #image(raw.data$raw.data[,grep(dat, colnames(raw.data$raw.data))])
+  })
+  
+  
+  
+  output$choose_dataset <- renderUI({
+    raw.data <- getRawData()
+    fitxategiak <-  raw.data$file_names[grep("*.CEL", raw.data$file_names)]
+    selectInput("dataset", "Data set", fitxategiak)
+  })
+  
+  
+  output$plot2 <- renderPlot({
+    raw.data <- getRawData()
+    
+    # Get the data set with the appropriate name
+    #dat <- get(input$dataset)
+    image(raw.data$raw.data[,grep(input$dataset, colnames(raw.data$raw.data))])
   })
   
   

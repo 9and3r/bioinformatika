@@ -9,7 +9,10 @@ fileLoader <- fileInput (inputId="data_loader",
 shinyUI(fluidPage(
 	header, 
 	fileLoader,
-	plotOutput(outputId="file_list", width="500px"),
-	plotOutput(outputId="myPlot", width="500px")
+	  tabsetPanel("true",
+	    tabPanel("Plot", plotOutput(outputId="myPlot", width="500px")),
+	    tabPanel("kaka", uiOutput("choose_dataset"), plotOutput(outputId="plot2", width="500px")),
+	    tabPanel("kaka 2")
+	  )
 ))
 
