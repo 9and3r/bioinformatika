@@ -80,6 +80,15 @@ shinyServer(function(input, output) {
     image(raw.data$raw.data[,grep(input$dataset, colnames(raw.data$raw.data))])
   })
   
+  input$do <- observe({
+    if(input$ezabatu > 0){
+      #TODO: Elementua ezabatzen da
+      #Beharbada mezu bat adieraziko da ezabatu egin dela
+      raw.data$raw.data <- isolate(raw.data$raw.data[,grep(input$dataset, colnames(raw.data$raw.data))])
+    }
+    
+  })
+  
   
   ## COMBOBOX BAT JARRIKO DA HEMEN -------------------------------------
   ##
