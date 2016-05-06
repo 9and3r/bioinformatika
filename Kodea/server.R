@@ -59,42 +59,88 @@ shinyServer(function(input, output) {
   
   # OUTPUTS ------------------------------------------------------------
   
-  output$myPlot <- renderPlot({
-     raw.data <- getRawData()
-     #image(raw.data$raw.data[,grep(dat, colnames(raw.data$raw.data))])
-  })
   
   
+  ###########
+  # Panel 1 #
+  ###########
   
-  output$choose_dataset <- renderUI({
+  output$panel1_output <- renderUI({
     raw.data <- getRawData()
     fitxategiak <-  raw.data$fitxategiak[grep("*.CEL", raw.data$fitxategiak)]
-    selectInput("dataset", "Data set", fitxategiak)
+    selectInput("panel1_dataset", "Data set", fitxategiak)
   })
   
-  
-  output$plot2 <- renderPlot({
+  output$panel1_irudia <- renderPlot({
     raw.data <- getRawData()
-    
     # Get the data set with the appropriate name
     #dat <- get(input$dataset)
-    image(raw.data$raw.data[,grep(input$dataset, colnames(raw.data$raw.data))])
+    image(raw.data$raw.data[,grep(input$panel1_dataset, colnames(raw.data$raw.data))])
   })
   
   observeEvent(input$ezabatu, {
     raw.data <- getRawData()
-    print(raw.data$fitxategiak)
-    print(colnames(raw.data$fitxategiak))
-    raw.data$fitxategiak <- raw.data$fitxategiak[raw.data$fitxategiak != input$dataset]
-    print(grep(input$dataset, colnames(raw.data$raw.data)))
-    print(raw.data$fitxategiak)
-    raw.data$raw.data <- raw.data$raw.data[-grep(input$dataset, colnames(raw.data$raw.data))]
+    raw.data$fitxategiak <- raw.data$fitxategiak[raw.data$fitxategiak != input$panel1_dataset]
+    raw.data$raw.data <- raw.data$raw.data[-grep(input$panel1_dataset, colnames(raw.data$raw.data))]
+  })
+  
+  ###########
+  # Panel 2 #
+  ###########
+  
+  output$panel2_boxplot <- renderPlot({
+    raw.data <- getRawData()
+    res <- NULL
+    if(!is.null(rvalues$directory)){
+      res <- boxplot(raw.data$raw.data, col=raw.data$raw.data@phenoData@data$Type)#     boxplot(raw.data$raw.data)
+    }
+    print(res)
   })
   
   
-  ## COMBOBOX BAT JARRIKO DA HEMEN -------------------------------------
-  ##
-  ##TODO: 
+  
+  
+  output$panel2_irudia1 <- renderPlot({
+    raw.data <- getRawData()
+    res <- NULL
+    if(!is.null(rvalues$directory)){
+      res <- hist(raw.data$raw.data)
+    }
+    print(res)
+  })
+  
+  output$panel2_irudia2 <- renderPlot({
+    raw.data <- getRawData()
+    res <- NULL
+    if(!is.null(rvalues$directory)){
+      data.deg <- AffyRNAdeg(raw.data$raw.data)
+      res <- plotAffyRNAdeg(data.deg)
+    }
+    print(res)
+  })
+  
+  ###########
+  # Panel 3 #
+  ###########
+  
+  output$panel3_output <- renderUI({
+    raw.data <- getRawData()
+    fitxategiak <-  raw.data$fitxategiak[grep("*.CEL", raw.data$fitxategiak)]
+    selectInput("panel3_dataset", "Data set", fitxategiak)
+  })
+  
+  output$panel3_irudia <- renderPlot({
+    raw.data <- getRawData()
+    # Get the data set with the appropriate name
+    #dat <- get(input$dataset)
+    image(raw.data$raw.data[,grep(input$panel3_dataset, colnames(raw.data$raw.data))])
+  })
+  
+  observeEvent(input$ezabatu, {
+    raw.data <- getRawData()
+    raw.data$fitxategiak <- raw.data$fitxategiak[raw.data$fitxategiak != input$panel3_dataset]
+    raw.data$raw.data <- raw.data$raw.data[-grep(input$panel3_dataset, colnames(raw.data$raw.data))]
+  })
 
 })
 
