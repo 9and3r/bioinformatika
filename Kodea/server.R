@@ -50,6 +50,7 @@ shinyServer(function(input, output) {
 		# Update the rvalues object
 		rvalues$file_names <- input$data_loader$name
 		rvalues$raw.data <- read.affy(path=rvalues$directory)
+		rvalues$fitxategiak <- input$data_loader$name
 		#data <- rvalues$raw.data
 		data <- rvalues
 	}
@@ -67,7 +68,7 @@ shinyServer(function(input, output) {
   
   output$choose_dataset <- renderUI({
     raw.data <- getRawData()
-    fitxategiak <-  raw.data$file_names[grep("*.CEL", raw.data$file_names)]
+    fitxategiak <-  raw.data$fitxategiak[grep("*.CEL", raw.data$fitxategiak)]
     selectInput("dataset", "Data set", fitxategiak)
   })
   
@@ -80,13 +81,14 @@ shinyServer(function(input, output) {
     image(raw.data$raw.data[,grep(input$dataset, colnames(raw.data$raw.data))])
   })
   
-  input$do <- observe({
-    if(input$ezabatu > 0){
-      #TODO: Elementua ezabatzen da
-      #Beharbada mezu bat adieraziko da ezabatu egin dela
-      raw.data$raw.data <- isolate(raw.data$raw.data[,grep(input$dataset, colnames(raw.data$raw.data))])
-    }
-    
+  observeEvent(input$ezabatu, {
+    raw.data <- getRawData()
+    print(raw.data$fitxategiak)
+    print(colnames(raw.data$fitxategiak))
+    raw.data$fitxategiak <- raw.data$fitxategiak[raw.data$fitxategiak != input$dataset]
+    print(grep(input$dataset, colnames(raw.data$raw.data)))
+    print(raw.data$fitxategiak)
+    raw.data$raw.data <- raw.data$raw.data[-grep(input$dataset, colnames(raw.data$raw.data))]
   })
   
   
