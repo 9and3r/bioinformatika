@@ -72,20 +72,31 @@ shinyServer(function(input, output) {
   output$panel1_output <- renderUI({
     raw.data <- getRawData()
     fitxategiak <-  raw.data$fitxategiak[grep("*.CEL", raw.data$fitxategiak)]
-    selectInput("panel1_dataset", "Data set", fitxategiak)
+    if (length(fitxategiak) > 0){
+        selectInput("panel1_dataset", "Data set", fitxategiak)
+    }
   })
   
   output$panel1_irudia <- renderPlot({
     raw.data <- getRawData()
-    # Get the data set with the appropriate name
-    #dat <- get(input$dataset)
-    image(raw.data$raw.data[,grep(input$panel1_dataset, colnames(raw.data$raw.data))])
+    if (!is.null(input$panel1_dataset) && !is.null(raw.data$raw.data)){
+        pos <- grep(input$panel1_dataset, colnames(raw.data$raw.data))
+        if (length(pos) > 0 && pos > 0){
+          image(raw.data$raw.data[,pos])
+        }
+    }
   })
   
   observeEvent(input$ezabatu, {
     raw.data <- getRawData()
-    raw.data$fitxategiak <- raw.data$fitxategiak[raw.data$fitxategiak != input$panel1_dataset]
-    raw.data$raw.data <- raw.data$raw.data[-grep(input$panel1_dataset, colnames(raw.data$raw.data))]
+    if (!is.null(raw.data$raw.data) && !is.null(raw.data$fitxategiak) && !is.null(input$panel1_dataset)){
+      raw.data$fitxategiak <- raw.data$fitxategiak[raw.data$fitxategiak != input$panel1_dataset]
+      pos <- grep(input$panel1_dataset, colnames(raw.data$raw.data))
+      if (length(pos) > 0 && pos > 0){
+        raw.data$raw.data <- raw.data$raw.data[-pos]
+      }
+    }
+    
   })
   
   ###########
