@@ -92,9 +92,20 @@ shinyServer(function(input, output) {
     raw.data <- getRawData()
     res <- NULL
     if(!is.null(rvalues$directory)){
-      res <- boxplot(raw.data$raw.data, col=raw.data$raw.data@phenoData@data$Type)#     boxplot(raw.data$raw.data)
+      boxplot(raw.data$raw.data, col=raw.data$raw.data@phenoData@data$Type)#     boxplot(raw.data$raw.data)
     }
-    print(res)
+  })
+  
+  output$panel2_output <- renderUI({
+    raw.data <- getRawData()
+    fitxategiak <-  raw.data$fitxategiak[grep("*.CEL", raw.data$fitxategiak)]
+    selectInput("panel2_dataset", "Data set", fitxategiak)
+  })
+  
+  observeEvent(input$ezabatu2, {
+    raw.data <- getRawData()
+    raw.data$fitxategiak <- raw.data$fitxategiak[raw.data$fitxategiak != input$panel2_dataset]
+    raw.data$raw.data <- raw.data$raw.data[-grep(input$panel2_dataset, colnames(raw.data$raw.data))]
   })
   
   
@@ -158,7 +169,7 @@ shinyServer(function(input, output) {
     plotMA(raw.data$raw.data, grep(input$panel3_dataset, colnames(raw.data$raw.data)))
   })
   
-  observeEvent(input$ezabatu2, {
+  observeEvent(input$ezabatu3, {
     raw.data <- getRawData()
     raw.data$fitxategiak <- raw.data$fitxategiak[raw.data$fitxategiak != input$panel3_dataset]
     raw.data$raw.data <- raw.data$raw.data[-grep(input$panel3_dataset, colnames(raw.data$raw.data))]
@@ -175,9 +186,33 @@ shinyServer(function(input, output) {
     plot(qcs)
   })
   
+  observeEvent(input$ezabatu4, {
+    raw.data <- getRawData()
+    raw.data$fitxategiak <- raw.data$fitxategiak[raw.data$fitxategiak != input$panel4_dataset]
+    raw.data$raw.data <- raw.data$raw.data[-grep(input$panel4_dataset, colnames(raw.data$raw.data))]
+  })
+  
+  output$panel4_output <- renderUI({
+    raw.data <- getRawData()
+    fitxategiak <-  raw.data$fitxategiak[grep("*.CEL", raw.data$fitxategiak)]
+    selectInput("panel4_dataset", "Data set", fitxategiak)
+  })
+  
   ###########
   # Panel 5 #
   ###########
+  
+  output$panel5_output <- renderUI({
+    raw.data <- getRawData()
+    fitxategiak <-  raw.data$fitxategiak[grep("*.CEL", raw.data$fitxategiak)]
+    selectInput("panel5_dataset", "Data set", fitxategiak)
+  })
+  
+  observeEvent(input$ezabatu5, {
+    raw.data <- getRawData()
+    raw.data$fitxategiak <- raw.data$fitxategiak[raw.data$fitxategiak != input$panel5_dataset]
+    raw.data$raw.data <- raw.data$raw.data[-grep(input$panel5_dataset, colnames(raw.data$raw.data))]
+  })
   
   output$panel5_irudia1 <- renderPlot({
     raw.data <- getRawData()
