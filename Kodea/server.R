@@ -163,6 +163,83 @@ shinyServer(function(input, output) {
     raw.data$fitxategiak <- raw.data$fitxategiak[raw.data$fitxategiak != input$panel3_dataset]
     raw.data$raw.data <- raw.data$raw.data[-grep(input$panel3_dataset, colnames(raw.data$raw.data))]
   })
+  
+  ###########
+  # Panel 4 #
+  ###########
+  
+  output$panel4_irudia <- renderPlot({
+    raw.data <- getRawData()
+    mas5.data <- call.exprs(raw.data$raw.data,"mas5")
+    qcs <- qc(raw.data$raw.data,mas5.data)
+    plot(qcs)
+  })
+  
+  ###########
+  # Panel 5 #
+  ###########
+  
+  output$panel5_irudia1 <- renderPlot({
+    raw.data <- getRawData()
+    # Normalization
+    rma.data <- call.exprs(raw.data$raw.data,"rma")
+    
+    
+    # Boxplot and distribution after normalization
+    boxplot(exprs(rma.data), col=raw.data$raw.data@phenoData@data$Type)
+  })
+  
+  output$panel5_irudia2 <- renderPlot({
+    raw.data <- getRawData()
+    
+    rma.data <- call.exprs(raw.data$raw.data,"rma")
+    plot(density(exprs(rma.data[,1]),col=raw.data$raw.data@phenoData@data$Type[1]))
+    sapply(2:length(raw.data$raw.data), 
+           FUN=function(i) {
+             lines(density(exprs(rma.data[,i])), col=raw.data$raw.data@phenoData@data$Type[i])
+           })
+  })
+  
+  ###########
+  # Panel 6 #
+  ###########
+  
+  
+  output$panel6_output <- renderUI({
+    raw.data <- getRawData()
+    fitxategiak <-  raw.data$fitxategiak[grep("*.CEL", raw.data$fitxategiak)]
+    selectInput("panel6_dataset", "Data set", fitxategiak)
+  })
+  
+  output$panel6_irudia <- renderPlot({
+    
+    raw.data <- getRawData()
+    rma.data <- call.exprs(raw.data$raw.data,"rma")
+    
+    medians <- sapply(1:length(raw.data$raw.data), 
+                      FUN=function(i) {
+                        return(median(exprs(raw.data$raw.data[,i])))
+                      })
+    
+    id.ref <- order(medians)[length(raw.data$raw.data)/2]
+    
+    plotMA <- function (data, index) { 
+      m <- exprs(data[,index]) - exprs(data[,id.ref])
+      a <- (exprs(data[,index]) + exprs(data[,id.ref]))/2
+      ma.plot(a,m,cex=0.75,lwd=3)
+    }
+    
+    
+    plotMA(rma.data, grep(input$panel6_dataset, colnames(raw.data$raw.data)))
+  })
+  
+  observeEvent(input$ezabatu6, {
+    raw.data <- getRawData()
+    raw.data$fitxategiak <- raw.data$fitxategiak[raw.data$fitxategiak != input$panel6_dataset]
+    raw.data$raw.data <- raw.data$raw.data[-grep(input$panel6_dataset, colnames(raw.data$raw.data))]
+  })
+  
+  
 
 })
 
