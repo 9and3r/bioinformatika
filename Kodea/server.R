@@ -49,7 +49,11 @@ shinyServer(function(input, output) {
 		
 		# Update the rvalues object
 		rvalues$file_names <- input$data_loader$name
-		rvalues$raw.data <- read.affy(path=rvalues$directory)
+		
+		# Fitxeroa zein den bilatu
+		covdesc <- rvalues$file_names[-grep("*.CEL", rvalues$file_names)]
+		
+		rvalues$raw.data <- read.affy(path=rvalues$directory, covdesc=covdesc)
 		rvalues$fitxategiak <- input$data_loader$name
 		#data <- rvalues$raw.data
 		data <- rvalues
