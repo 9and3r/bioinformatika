@@ -129,11 +129,33 @@ shinyServer(function(input, output) {
     selectInput("panel3_dataset", "Data set", fitxategiak)
   })
   
+  
+  
   output$panel3_irudia <- renderPlot({
+    
+    
+    
+    
     raw.data <- getRawData()
+    
+    num.arrays <- length(raw.data$raw.data)
+    
+    medians <- sapply(1:num.arrays, 
+                      FUN=function(i) {
+                        return(median(exprs(raw.data$raw.data[,i])))
+                      })
+    
+    id.ref <- order(medians)[num.arrays/2]
+    
+    plotMA <- function (data, index) {
+      m <- exprs(data[,index]) - exprs(data[,id.ref])
+      a <- (exprs(data[,index]) + exprs(data[,id.ref]))/2
+      ma.plot(a,m,cex=0.75,lwd=3)
+    }
+    
     # Get the data set with the appropriate name
     #dat <- get(input$dataset)
-    image(raw.data$raw.data[,grep(input$panel3_dataset, colnames(raw.data$raw.data))])
+    plotMA(raw.data$raw.data, grep(input$panel3_dataset, colnames(raw.data$raw.data)))
   })
   
   observeEvent(input$ezabatu2, {
