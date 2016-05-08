@@ -136,7 +136,7 @@ shinyServer(function(input, output) {
     image(raw.data$raw.data[,grep(input$panel3_dataset, colnames(raw.data$raw.data))])
   })
   
-  observeEvent(input$ezabatu, {
+  observeEvent(input$ezabatu2, {
     raw.data <- getRawData()
     raw.data$fitxategiak <- raw.data$fitxategiak[raw.data$fitxategiak != input$panel3_dataset]
     raw.data$raw.data <- raw.data$raw.data[-grep(input$panel3_dataset, colnames(raw.data$raw.data))]
