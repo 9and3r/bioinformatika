@@ -35,6 +35,8 @@ shinyServer(function(input, output) {
 		length(input$data_loader$names)!=length(rvalues$file_names) || 
 		all(sort(input$data_loader$names)==sort(rvalues$file_names)))) {
 	  
+	  #Jakiteko datuak kargatzen dagoen
+	  print("Datuak kargatzen... Behin bakarrik agertu behar naiz :)")
 	  
 		# Create a temporary directory
 		rvalues$directory <- paste0(tempdir(),separator,gsub(" ","_",gsub(":","_",date())))
