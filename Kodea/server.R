@@ -33,7 +33,7 @@ shinyServer(function(input, output) {
     # Check for changes in the loaded files
 	if (!is.null(input$data_loader) & (is.null(rvalues$file_names) ||
 		length(input$data_loader$name)!=length(rvalues$file_names) || 
-		all(sort(input$data_loader$name)==sort(rvalues$file_names)))) {
+		any(sort(input$data_loader$name)==sort(rvalues$file_names)))) {
 	  
 	  #Jakiteko datuak kargatzen dagoen
 	  print("Datuak kargatzen... Behin bakarrik agertu behar naiz :)")
