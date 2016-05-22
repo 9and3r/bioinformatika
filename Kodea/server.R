@@ -87,12 +87,6 @@ shinyServer(function(input, output) {
     }
   })
   
-  daturikEz <- function(){
-    plot(c(1,2,3,4), c(1,2,3,4))
-    text(2, 2, "Ez dago daturik")
-  }
-  
-  
   ###########
   # Panel 1 #
   ###########
@@ -106,8 +100,6 @@ shinyServer(function(input, output) {
         if (length(pos) > 0 && pos > 0){
           image(raw.data$raw.data[,pos])
         }
-    }else{
-      daturikEz()
     }
   })
   
